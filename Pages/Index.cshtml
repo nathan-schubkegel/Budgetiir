@@ -14,4 +14,52 @@
 }
 </style>
 
-<p>Add some stuff, yo</p>
+<table class="table table-sm ">
+  <thead>
+    <tr>
+      <th scope="col">Envelope Name</th>
+      <th scope="col">Saved</th>
+      <th scope="col">(needed)</th>
+      <th scope="col">Goal</th>
+      <th scope="col">(by date)</th>
+    </tr>
+  </thead>
+  <tbody id="envelopes-table-body">
+  </tbody>
+</table>
+<div id="envelopes-table-error"></div>
+
+<script>
+async function RepopulateEnvelopes()
+{
+  const tbody = document.getElementById("envelopes-table-body");
+  
+  // remove all children
+  tbody.textContent = ""
+  
+  // request the envelopes
+  try
+  {
+    let r = await fetch('/api/envelopes', {method: 'POST'});
+    if (!r.ok) throw new Error(r.statusText + " (" + r.status + ")");
+    let j = await r.json();
+    for (let i = 0; i < j.length; j++) {
+      let envelope = j[i];
+      var row = tbody.insertRow();
+      row.insertCell().textContent = envelope.name;
+      row.insertCell().textContent = envelope.savedAmount;
+      row.insertCell().textContent = DetermineAmountNeededToReachGoal(envelope.savedAmount, envelope.goalAmount);
+      row.insertCell().textContent = envelope.goalAmount;
+      row.insertCell().textContent = envelope.goalDate;
+    }
+  }
+  catch (e)
+  {
+    const errorDiv = document.getElementById("envelopes-table-error");
+    errorDiv.textContent = "Error fetching/parsing envelopes: " + e;
+  }
+}
+
+RepopulateEnvelopes();
+
+</script>
