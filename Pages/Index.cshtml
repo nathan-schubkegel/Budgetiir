@@ -1,7 +1,7 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Budgets";
 }
 
 <style>
@@ -13,6 +13,11 @@
   margin-bottom: 0px;
 }
 </style>
+
+<script src='/js/bignumber.js'></script>
+<script>
+BigNumber.set({ ROUNDING_MODE: 4 }); // 4 is HALF_UP
+</script>
 
 <table class="table table-sm ">
   <thead>
@@ -40,11 +45,11 @@ async function RepopulateEnvelopes()
   // request the envelopes
   try
   {
-    let r = await fetch('/api/envelopes', {method: 'POST'});
+    let r = await fetch('/api/envelopes', {method: 'GET'});
     if (!r.ok) throw new Error(r.statusText + " (" + r.status + ")");
     let j = await r.json();
-    for (let i = 0; i < j.length; j++) {
-      let envelope = j[i];
+    for (let i = 0; i < j.envelopes.length; i++) {
+      let envelope = j.envelopes[i];
       var row = tbody.insertRow();
       row.insertCell().textContent = envelope.name;
       row.insertCell().textContent = envelope.savedAmount;
@@ -58,6 +63,14 @@ async function RepopulateEnvelopes()
     const errorDiv = document.getElementById("envelopes-table-error");
     errorDiv.textContent = "Error fetching/parsing envelopes: " + e;
   }
+}
+
+function DetermineAmountNeededToReachGoal(savedAmount, goalAmount)
+{
+  let s = BigNumber(savedAmount);
+  let g = BigNumber(goalAmount);
+  if (s.isGreaterThan(g)) return "0";
+  else return g.minus(s).toFixed();
 }
 
 RepopulateEnvelopes();

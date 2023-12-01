@@ -24,5 +24,32 @@ namespace Budgetiir
     {
       _logger = logger;
     }
+    
+    public class GetEnvelopesPoco
+    {
+      public List<EnvelopePoco> Envelopes { get; set; }
+    }
+    
+    public class EnvelopePoco
+    {
+      public string Name { get; set; }
+      public string SavedAmount { get; set; }
+      public string GoalAmount { get; set; }
+      public string GoalDate { get; set; }
+    }
+    
+    [HttpGet("envelopes")]
+    public ActionResult<GetEnvelopesPoco> GetEnvelopes()
+    {
+      return new GetEnvelopesPoco
+      {
+        Envelopes = new()
+        {
+          new EnvelopePoco { Name = "Animal Feed", SavedAmount = "100", GoalAmount = "500", GoalDate = DateTime.Now.AddDays(1 - DateTime.Now.Day) /* first day of month */ .AddDays(14) /* fifteenth day */ .ToString("o") },
+          new EnvelopePoco { Name = "New Tooth", SavedAmount = "0", GoalAmount = "2000", GoalDate = DateTime.Now.AddDays(1 - DateTime.Now.Day) /* first day of month */ .AddDays(27) /* 28th day */ .ToString("o") },
+          new EnvelopePoco { Name = "Corn Dogs", SavedAmount = "5", GoalAmount = "11.75", GoalDate = DateTime.Now.ToString("o") },
+        }
+      };
+    }
   }
 }
