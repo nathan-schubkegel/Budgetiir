@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.InteropServices;
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
@@ -40,17 +41,28 @@ namespace Budgetiir
       stoppingToken.ThrowIfCancellationRequested();
       try
       {
-        var args = $"{GetServerAddress()} --new-window";
-        var path = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe";
-        if (!File.Exists(path))
+        // TODO: make this configured by appsettings.json
+        string args;
+        string path;
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-          path = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
+          args = $"{GetServerAddress()} --new-window";
+          path = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe";
           if (!File.Exists(path))
           {
-            // use the default browser
-            path = "cmd.exe";
-            args = $"/c explorer {GetServerAddress()}";
+            path = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
+            if (!File.Exists(path))
+            {
+              // use the default browser
+              path = "cmd.exe";
+              args = $"/c explorer {GetServerAddress()}";
+            }
           }
+        }
+        else // linux or whatever
+        {
+          args = $"-new-window {GetServerAddress()}";
+          path = @"firefox";
         }
         
         _logger.LogInformation("Launching new browser window. Press 'Enter' in command line to launch another.");
