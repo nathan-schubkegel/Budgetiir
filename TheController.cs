@@ -27,15 +27,7 @@ namespace Budgetiir
     
     public class GetEnvelopesPoco
     {
-      public List<EnvelopePoco> Envelopes { get; set; }
-    }
-    
-    public class EnvelopePoco
-    {
-      public string Name { get; set; }
-      public string SavedAmount { get; set; }
-      public string GoalAmount { get; set; }
-      public string GoalDate { get; set; }
+      public List<Envelope> Envelopes { get; set; }
     }
     
     [HttpGet("envelopes")]
@@ -45,9 +37,11 @@ namespace Budgetiir
       {
         Envelopes = new()
         {
-          new EnvelopePoco { Name = "Animal Feed", SavedAmount = "100", GoalAmount = "500", GoalDate = DateTime.Now.AddDays(1 - DateTime.Now.Day) /* first day of month */ .AddDays(14) /* fifteenth day */ .ToString("o") },
-          new EnvelopePoco { Name = "New Tooth", SavedAmount = "0", GoalAmount = "2000", GoalDate = DateTime.Now.AddDays(1 - DateTime.Now.Day) /* first day of month */ .AddDays(27) /* 28th day */ .ToString("o") },
-          new EnvelopePoco { Name = "Corn Dogs", SavedAmount = "5", GoalAmount = "11.75", GoalDate = DateTime.Now.ToString("o") },
+          new Envelope { Name = "Auto Insurance", SavedAmount = 0m, MonthlyGoal = new MonthlyGoal { DayOfMonth = 30, GoalAmount = 100m } },
+          new Envelope { Name = "Timothy Grass Purchase", SavedAmount = 100m, TargetDateGoal = new TargetDateGoal { StartDate = DateTime.Parse("2023-09-01T00:00:00Z"), TargetDate = DateTime.Parse("2024-03-01T00:00:00Z"), GoalAmount = 1500m } },
+          new Envelope { Name = "Amazon Prime Subscription", SavedAmount = 50m, YearlyGoal = new YearlyGoal { DayOfYear = 100, GoalAmount = 170m } },
+          new Envelope { Name = "Emergency Fund", SavedAmount = 600m, NoDeadlineGoal = new NoDeadlineGoal { GoalAmount = 1000m } },
+          new Envelope { Name = "Kid's College Fund", SavedAmount = 0, NoGoal = new NoGoal() },
         }
       };
     }
