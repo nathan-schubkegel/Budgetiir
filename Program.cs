@@ -17,14 +17,14 @@ namespace Budgetiir
       Host.CreateDefaultBuilder(args)
         .ConfigureWebHostDefaults(webBuilder =>
         {
-            webBuilder.ConfigureKestrel(serverOptions =>
-            {
-                // Set properties and call methods on options
+          webBuilder.ConfigureKestrel(serverOptions =>
+          {
+            // Set properties and call methods on options
 
-                // TODO: read before adding anthing
-                // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/options?view=aspnetcore-6.0
-            })
-            .UseStartup<Startup>();
+            // TODO: read before adding anthing
+            // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/options?view=aspnetcore-6.0
+          })
+          .UseStartup<Startup>();
         }).Build().Run();
     }
   }
