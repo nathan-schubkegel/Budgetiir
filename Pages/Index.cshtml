@@ -67,6 +67,7 @@ async function RepopulateEnvelopes()
 
 function DetermineAmountNeededToReachGoal(savedAmount, goalAmount)
 {
+  if (goalAmount === "") return "";
   let s = BigNumber(savedAmount);
   let g = BigNumber(goalAmount);
   if (s.isGreaterThan(g)) return "0";
