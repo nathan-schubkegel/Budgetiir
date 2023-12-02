@@ -52,10 +52,10 @@ async function RepopulateEnvelopes()
       let envelope = j.envelopes[i];
       var row = tbody.insertRow();
       row.insertCell().textContent = envelope.name;
-      row.insertCell().textContent = envelope.savedAmount;
-      row.insertCell().textContent = DetermineAmountNeededToReachGoal(envelope.savedAmount, envelope.goalAmount);
-      row.insertCell().textContent = envelope.goalAmount;
-      row.insertCell().textContent = envelope.goalDate;
+      row.insertCell().textContent = PrettyCurrency(envelope.savedAmount);
+      row.insertCell().textContent = PrettyCurrency(DetermineAmountNeededToReachGoal(envelope.savedAmount, envelope.goalAmount));
+      row.insertCell().textContent = PrettyCurrency(envelope.goalAmount);
+      row.insertCell().textContent = PrettyDate(envelope.goalDate);
     }
   }
   catch (e)
@@ -72,6 +72,19 @@ function DetermineAmountNeededToReachGoal(savedAmount, goalAmount)
   let g = BigNumber(goalAmount);
   if (s.isGreaterThan(g)) return "0";
   else return g.minus(s).toFixed();
+}
+        
+function PrettyDate(d)
+{
+  if (!d) return "";
+  var date = new Date(d);
+  return (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
+}
+
+function PrettyCurrency(c)
+{
+  if (!c) return "";
+  return "$" + c;
 }
 
 RepopulateEnvelopes();
