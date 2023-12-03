@@ -12,6 +12,14 @@
 .table {
   margin-bottom: 0px;
 }
+
+.needs-more-money {
+  background: red;
+}
+
+.has-enough-money {
+  background: green;
+}
 </style>
 
 <script src='/js/bignumber.js'></script>
@@ -51,8 +59,17 @@ async function RepopulateEnvelopes()
     for (let i = 0; i < j.envelopes.length; i++) {
       let envelope = j.envelopes[i];
       var row = tbody.insertRow();
+      
       row.insertCell().textContent = envelope.name;
-      row.insertCell().textContent = PrettyCurrency(envelope.savedAmount);
+      const savedAmountDiv = document.createElement("div");
+      if (envelope.goalAmount)
+      {
+        savedAmountDiv.classList.add(BigNumber(envelope.savedAmount).isGreaterThanOrEqualTo(BigNumber(envelope.goalAmount))
+          ? "has-enough-money" : "needs-more-money");
+      }
+      savedAmountDiv.textContent = PrettyCurrency(envelope.savedAmount);
+      row.insertCell().appendChild(savedAmountDiv);
+
       row.insertCell().textContent = PrettyCurrency(DetermineAmountNeededToReachGoal(envelope.savedAmount, envelope.goalAmount));
       row.insertCell().textContent = PrettyCurrency(envelope.goalAmount);
       row.insertCell().textContent = PrettyDate(envelope.goalDate);
